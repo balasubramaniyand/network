@@ -1,0 +1,45 @@
+Collecting murmurhash
+  Downloading murmurhash-1.0.10-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (29 kB)
+Collecting mypy-extensions
+  Downloading mypy_extensions-1.0.0-py3-none-any.whl (4.7 kB)
+Collecting nbclient
+  Downloading nbclient-0.10.0-py3-none-any.whl (25 kB)
+Collecting nbconvert
+  Downloading nbconvert-7.16.4-py3-none-any.whl (257 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 257.4/257.4 kB 42.2 MB/s eta 0:00:00
+Collecting nest-asyncio
+  Downloading nest_asyncio-1.6.0-py3-none-any.whl (5.2 kB)
+Collecting networkx
+  Downloading networkx-3.2.1-py3-none-any.whl (1.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 84.1 MB/s eta 0:00:00
+Collecting nltk
+  Downloading nltk-3.8.1-py3-none-any.whl (1.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 75.2 MB/s eta 0:00:00
+Collecting notebook
+  Downloading notebook-7.2.1-py3-none-any.whl (5.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 43.0 MB/s eta 0:00:00
+Collecting numba
+  Downloading numba-0.60.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.7 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.7/3.7 MB 88.4 MB/s eta 0:00:00
+Collecting numpy
+  Downloading numpy-2.0.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (19.3 MB)
+     ━━━━━━━━━━                               4.9/19.3 MB 113.8 MB/s eta 0:00:01
+ERROR: Could not install packages due to an OSError: [Errno 28] No space left on device
+
+
+[notice] A new release of pip is available: 23.0.1 -> 24.1.2
+[notice] To update, run: pip install --upgrade pip
+The command '/bin/sh -c pip install -r /app/requirements.txt' returned a non-zero code: 1
+root@ml-opexwise:/opt/sentimental-analysis-multiclass# df -h
+Filesystem                 Size  Used Avail Use% Mounted on
+/dev/root                   49G   48G  732M  99% /
+tmpfs                      7.8G     0  7.8G   0% /dev/shm
+tmpfs                      3.1G  1.1M  3.1G   1% /run
+tmpfs                      5.0M     0  5.0M   0% /run/lock
+efivarfs                   128K  3.9K  120K   4% /sys/firmware/efi/efivars
+/dev/nvme0n1p15            105M  6.1M   99M   6% /boot/efi
+tmpfs                      1.6G  4.0K  1.6G   1% /run/user/1000
+/dev/mapper/ml--vg-ml--lv  229G  320K  217G   1% /opt
+overlay                     49G   48G  732M  99% /var/lib/docker/overlay2/6148efe1b048dcf5d0279d8b7a1e2a7d546c1ae360b452bb9d6a8db01c4dd04d/merged
+overlay                     49G   48G  732M  99% /var/lib/docker/overlay2/93c4d542087aae4f152805d8a6588e3fac7615d26f3d99713e5e49f357cc5753/merged
+root@ml-opexwise:/opt/sentimental-analysis-multiclass#
