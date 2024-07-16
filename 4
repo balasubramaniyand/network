@@ -1,0 +1,775 @@
+root@ml-opexwise:/var/opt/kafka/sentimental-analysis-multiclass# docker build -t iopexlabs/mlkafka:kafka_sentiment_analysis.3.1 .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  124.9kB
+Step 1/16 : FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
+ ---> ee2ed945a83c
+Step 2/16 : RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub 16
+ ---> Using cache
+ ---> a5fad7f4e962
+Step 3/16 : RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub
+ ---> Using cache
+ ---> 8dce1d257370
+Step 4/16 : RUN apt-get update && apt-get install -y --no-install-recommends gnupg2 curl ca-certificates &&     curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub | apt-key add - &&     echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda.list &&     echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list &&     apt-get purge --autoremove -y curl && rm -rf /var/lib/apt/lists/*
+ ---> Using cache
+ ---> 7faf5bf03553
+Step 5/16 : ENV CUDA_VERSION 10.2.89
+ ---> Using cache
+ ---> 9e7403aca3fd
+Step 6/16 : ENV CUDA_PKG_VERSION 10-2=$CUDA_VERSION-1
+ ---> Using cache
+ ---> 635182b063f6
+Step 7/16 : RUN apt-get update && apt-get install -y --no-install-recommends         cuda-cudart-$CUDA_PKG_VERSION cuda-compat-10-2 && ln -s cuda-10.2 /usr/local/cuda &&     rm -rf /var/lib/apt/lists/*
+ ---> Using cache
+ ---> 73c1760f571d
+Step 8/16 : RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf &&     echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
+ ---> Using cache
+ ---> 7767c45a02ce
+Step 9/16 : ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
+ ---> Using cache
+ ---> 96e7f72ababe
+Step 10/16 : ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+ ---> Using cache
+ ---> e7ad25ee082b
+Step 11/16 : ENV NVIDIA_VISIBLE_DEVICES all
+ ---> Using cache
+ ---> aee8e61582f7
+Step 12/16 : ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
+ ---> Using cache
+ ---> 4b2b38f6fd3e
+Step 13/16 : ENV NVIDIA_REQUIRE_CUDA "cuda>=10.2 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=396,driver<397 brand=tesla,driver>=410,driver<411 brand=tesla,driver>=418,driver<419"
+ ---> Using cache
+ ---> a0df158bbbce
+Step 14/16 : COPY ./requirements.txt /app/requirements.txt
+ ---> Using cache
+ ---> 27708d4c08ec
+Step 15/16 : RUN pip install -r /app/requirements.txt
+ ---> Running in 27e2d38ccf72
+Collecting absl-py
+  Downloading absl_py-2.1.0-py3-none-any.whl (133 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 133.7/133.7 kB 5.9 MB/s eta 0:00:00
+Collecting aiofiles
+  Downloading aiofiles-24.1.0-py3-none-any.whl (15 kB)
+Requirement already satisfied: anyio in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 3)) (4.4.0)
+Collecting argon2-cffi
+  Downloading argon2_cffi-23.1.0-py3-none-any.whl (15 kB)
+Collecting argon2-cffi-bindings
+  Downloading argon2_cffi_bindings-21.2.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (86 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 86.2/86.2 kB 21.4 MB/s eta 0:00:00
+Collecting asgiref
+  Downloading asgiref-3.8.1-py3-none-any.whl (23 kB)
+Collecting asttokens
+  Downloading asttokens-2.4.1-py2.py3-none-any.whl (27 kB)
+Collecting astunparse
+  Downloading astunparse-1.6.3-py2.py3-none-any.whl (12 kB)
+Collecting attrs
+  Downloading attrs-23.2.0-py3-none-any.whl (60 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.8/60.8 kB 14.9 MB/s eta 0:00:00
+Collecting backcall
+  Downloading backcall-0.2.0-py2.py3-none-any.whl (11 kB)
+Collecting backports.zoneinfo
+  Downloading backports.zoneinfo-0.2.1.tar.gz (74 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 74.1/74.1 kB 17.7 MB/s eta 0:00:00
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting beautifulsoup4
+  Downloading beautifulsoup4-4.12.3-py3-none-any.whl (147 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 147.9/147.9 kB 30.3 MB/s eta 0:00:00
+Collecting black
+  Downloading black-24.4.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 72.7 MB/s eta 0:00:00
+Collecting bleach
+  Downloading bleach-6.1.0-py3-none-any.whl (162 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 162.8/162.8 kB 33.2 MB/s eta 0:00:00
+Collecting blinker
+  Downloading blinker-1.8.2-py3-none-any.whl (9.5 kB)
+Collecting blis
+  Downloading blis-0.9.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (7.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.8/7.8 MB 80.9 MB/s eta 0:00:00
+Collecting boto3
+  Downloading boto3-1.34.144-py3-none-any.whl (139 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 139.2/139.2 kB 29.4 MB/s eta 0:00:00
+Collecting botocore
+  Downloading botocore-1.34.144-py3-none-any.whl (12.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.4/12.4 MB 69.5 MB/s eta 0:00:00
+Collecting bpemb
+  Downloading bpemb-0.3.5-py3-none-any.whl (19 kB)
+Collecting bs4
+  Downloading bs4-0.0.2-py2.py3-none-any.whl (1.2 kB)
+Collecting cachetools
+  Downloading cachetools-5.4.0-py3-none-any.whl (9.5 kB)
+Collecting catalogue
+  Downloading catalogue-2.0.10-py3-none-any.whl (17 kB)
+Requirement already satisfied: certifi in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 23)) (2024.7.4)
+Collecting cffi
+  Downloading cffi-1.16.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (443 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 443.4/443.4 kB 60.5 MB/s eta 0:00:00
+Collecting charset-normalizer
+  Downloading charset_normalizer-3.3.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (142 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 142.3/142.3 kB 30.7 MB/s eta 0:00:00
+Requirement already satisfied: click in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 26)) (8.1.7)
+Collecting cloudpickle
+  Downloading cloudpickle-3.0.0-py3-none-any.whl (20 kB)
+Collecting commonmark
+  Downloading commonmark-0.9.1-py2.py3-none-any.whl (51 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 51.1/51.1 kB 13.1 MB/s eta 0:00:00
+Collecting compound-word-splitter
+  Downloading compound-word-splitter-0.4.tar.gz (2.1 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting conllu
+  Downloading conllu-5.0.1-py3-none-any.whl (16 kB)
+Collecting contextlib2
+  Downloading contextlib2-21.6.0-py2.py3-none-any.whl (13 kB)
+Collecting cycler
+  Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Collecting cymem
+  Downloading cymem-2.0.8-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (46 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.9/46.9 kB 12.5 MB/s eta 0:00:00
+Collecting debugpy
+  Downloading debugpy-1.8.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 85.8 MB/s eta 0:00:00
+Collecting decorator
+  Downloading decorator-5.1.1-py3-none-any.whl (9.1 kB)
+Collecting deepface
+  Downloading deepface-0.0.92-py3-none-any.whl (105 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 105.5/105.5 kB 26.2 MB/s eta 0:00:00
+Collecting defusedxml
+  Downloading defusedxml-0.7.1-py2.py3-none-any.whl (25 kB)
+Collecting Deprecated
+  Downloading Deprecated-1.2.14-py2.py3-none-any.whl (9.6 kB)
+Collecting entrypoints
+  Downloading entrypoints-0.4-py3-none-any.whl (5.3 kB)
+Collecting et-xmlfile
+  Downloading et_xmlfile-1.1.0-py3-none-any.whl (4.7 kB)
+Collecting executing
+  Downloading executing-2.0.1-py2.py3-none-any.whl (24 kB)
+Collecting facenet-pytorch
+  Downloading facenet_pytorch-2.6.0-py3-none-any.whl (1.9 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 80.3 MB/s eta 0:00:00
+Requirement already satisfied: fastapi in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 43)) (0.88.0)
+Collecting filelock
+  Downloading filelock-3.15.4-py3-none-any.whl (16 kB)
+Collecting flair
+  Downloading flair-0.13.1-py3-none-any.whl (388 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 388.3/388.3 kB 55.0 MB/s eta 0:00:00
+Collecting Flask
+  Downloading flask-3.0.3-py3-none-any.whl (101 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 101.7/101.7 kB 24.9 MB/s eta 0:00:00
+Collecting flatbuffers
+  Downloading flatbuffers-24.3.25-py2.py3-none-any.whl (26 kB)
+Collecting fonttools
+  Downloading fonttools-4.53.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.6/4.6 MB 87.6 MB/s eta 0:00:00
+Collecting ftfy
+  Downloading ftfy-6.2.0-py3-none-any.whl (54 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 54.4/54.4 kB 14.3 MB/s eta 0:00:00
+Collecting future
+  Downloading future-1.0.0-py3-none-any.whl (491 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 491.3/491.3 kB 59.7 MB/s eta 0:00:00
+Collecting gast
+  Downloading gast-0.6.0-py3-none-any.whl (21 kB)
+Collecting gdown
+  Downloading gdown-5.2.0-py3-none-any.whl (18 kB)
+Collecting gensim
+  Downloading gensim-4.3.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (26.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 26.6/26.6 MB 50.1 MB/s eta 0:00:00
+Collecting google-auth
+  Downloading google_auth-2.32.0-py2.py3-none-any.whl (195 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 195.5/195.5 kB 39.5 MB/s eta 0:00:00
+Collecting google-auth-oauthlib
+  Downloading google_auth_oauthlib-1.2.1-py2.py3-none-any.whl (24 kB)
+Collecting google-pasta
+  Downloading google_pasta-0.2.0-py3-none-any.whl (57 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 57.5/57.5 kB 16.1 MB/s eta 0:00:00
+Collecting grpcio
+  Downloading grpcio-1.64.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (5.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.6/5.6 MB 73.5 MB/s eta 0:00:00
+Requirement already satisfied: h11 in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 58)) (0.14.0)
+Collecting h2o
+  Downloading h2o-3.46.0.4.tar.gz (265.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 265.3/265.3 MB 4.9 MB/s eta 0:00:00
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting h5py
+  Downloading h5py-3.11.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (5.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.3/5.3 MB 89.0 MB/s eta 0:00:00
+Collecting huggingface-hub
+  Downloading huggingface_hub-0.23.4-py3-none-any.whl (402 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 402.6/402.6 kB 58.6 MB/s eta 0:00:00
+Collecting hyperopt
+  Downloading hyperopt-0.2.7-py2.py3-none-any.whl (1.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 66.4 MB/s eta 0:00:00
+Requirement already satisfied: idna in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 63)) (3.7)
+Collecting importlib-metadata
+  Downloading importlib_metadata-8.0.0-py3-none-any.whl (24 kB)
+Collecting importlib-resources
+  Downloading importlib_resources-6.4.0-py3-none-any.whl (38 kB)
+Collecting iniconfig
+  Downloading iniconfig-2.0.0-py3-none-any.whl (5.9 kB)
+Collecting install
+  Downloading install-1.3.5-py3-none-any.whl (3.2 kB)
+Collecting ipykernel
+  Downloading ipykernel-6.29.5-py3-none-any.whl (117 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.2/117.2 kB 28.1 MB/s eta 0:00:00
+Collecting ipython
+  Downloading ipython-8.18.1-py3-none-any.whl (808 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 808.2/808.2 kB 72.9 MB/s eta 0:00:00
+Collecting ipython-genutils
+  Downloading ipython_genutils-0.2.0-py2.py3-none-any.whl (26 kB)
+Collecting ipywidgets
+  Downloading ipywidgets-8.1.3-py3-none-any.whl (139 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 139.4/139.4 kB 34.5 MB/s eta 0:00:00
+Requirement already satisfied: itsdangerous in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 72)) (2.2.0)
+Collecting Janome
+  Downloading Janome-0.5.0-py2.py3-none-any.whl (19.7 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 19.7/19.7 MB 68.2 MB/s eta 0:00:00
+Collecting jedi
+  Downloading jedi-0.19.1-py2.py3-none-any.whl (1.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 84.1 MB/s eta 0:00:00
+Requirement already satisfied: Jinja2 in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 75)) (3.1.4)
+Collecting jmespath
+  Downloading jmespath-1.0.1-py3-none-any.whl (20 kB)
+Collecting joblib
+  Downloading joblib-1.4.2-py3-none-any.whl (301 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 301.8/301.8 kB 44.8 MB/s eta 0:00:00
+Collecting jsonschema
+  Downloading jsonschema-4.23.0-py3-none-any.whl (88 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.5/88.5 kB 21.0 MB/s eta 0:00:00
+Collecting jupyter
+  Downloading jupyter-1.0.0-py2.py3-none-any.whl (2.7 kB)
+Collecting jupyter-client
+  Downloading jupyter_client-8.6.2-py3-none-any.whl (105 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 105.9/105.9 kB 23.7 MB/s eta 0:00:00
+Collecting jupyter-console
+  Downloading jupyter_console-6.6.3-py3-none-any.whl (24 kB)
+Collecting jupyter-core
+  Downloading jupyter_core-5.7.2-py3-none-any.whl (28 kB)
+Collecting jupyterlab-pygments
+  Downloading jupyterlab_pygments-0.3.0-py3-none-any.whl (15 kB)
+Collecting jupyterlab-widgets
+  Downloading jupyterlab_widgets-3.0.11-py3-none-any.whl (214 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 214.4/214.4 kB 41.2 MB/s eta 0:00:00
+Collecting keybert
+  Downloading keybert-0.8.5-py3-none-any.whl (37 kB)
+Collecting kiwisolver
+  Downloading kiwisolver-1.4.5-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 83.4 MB/s eta 0:00:00
+Collecting konoha
+  Downloading konoha-5.5.6-py3-none-any.whl (18 kB)
+Collecting langdetect
+  Downloading langdetect-1.0.9.tar.gz (981 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 981.5/981.5 kB 75.8 MB/s eta 0:00:00
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting libclang
+  Downloading libclang-18.1.1-py2.py3-none-manylinux2010_x86_64.whl (24.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 24.5/24.5 MB 57.0 MB/s eta 0:00:00
+Collecting llvmlite
+  Downloading llvmlite-0.43.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (43.9 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.9/43.9 MB 32.2 MB/s eta 0:00:00
+Collecting lxml
+  Downloading lxml-5.2.2-cp39-cp39-manylinux_2_28_x86_64.whl (5.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 80.6 MB/s eta 0:00:00
+Collecting Markdown
+  Downloading Markdown-3.6-py3-none-any.whl (105 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 105.4/105.4 kB 24.1 MB/s eta 0:00:00
+Requirement already satisfied: MarkupSafe in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 94)) (2.1.5)
+Collecting matplotlib
+  Downloading matplotlib-3.9.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (8.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 67.1 MB/s eta 0:00:00
+Collecting matplotlib-inline
+  Downloading matplotlib_inline-0.1.7-py3-none-any.whl (9.9 kB)
+Collecting memory-tempfile
+  Downloading memory_tempfile-2.2.3-py3-none-any.whl (5.7 kB)
+Collecting mistune
+  Downloading mistune-3.0.2-py3-none-any.whl (47 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.0/48.0 kB 13.6 MB/s eta 0:00:00
+Collecting more-itertools
+  Downloading more_itertools-10.3.0-py3-none-any.whl (59 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 59.2/59.2 kB 17.2 MB/s eta 0:00:00
+Collecting mpld3
+  Downloading mpld3-0.5.10-py3-none-any.whl (202 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 202.6/202.6 kB 38.9 MB/s eta 0:00:00
+Collecting mtcnn
+  Downloading mtcnn-0.1.1-py3-none-any.whl (2.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 86.0 MB/s eta 0:00:00
+Collecting murmurhash
+  Downloading murmurhash-1.0.10-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (29 kB)
+Collecting mypy-extensions
+  Downloading mypy_extensions-1.0.0-py3-none-any.whl (4.7 kB)
+Collecting nbclient
+  Downloading nbclient-0.10.0-py3-none-any.whl (25 kB)
+Collecting nbconvert
+  Downloading nbconvert-7.16.4-py3-none-any.whl (257 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 257.4/257.4 kB 44.6 MB/s eta 0:00:00
+Collecting nest-asyncio
+  Downloading nest_asyncio-1.6.0-py3-none-any.whl (5.2 kB)
+Collecting networkx
+  Downloading networkx-3.2.1-py3-none-any.whl (1.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 84.5 MB/s eta 0:00:00
+Collecting nltk
+  Downloading nltk-3.8.1-py3-none-any.whl (1.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 85.4 MB/s eta 0:00:00
+Collecting notebook
+  Downloading notebook-7.2.1-py3-none-any.whl (5.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 80.5 MB/s eta 0:00:00
+Collecting numba
+  Downloading numba-0.60.0-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.7 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.7/3.7 MB 91.3 MB/s eta 0:00:00
+Collecting numpy
+  Downloading numpy-2.0.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (19.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 19.3/19.3 MB 67.7 MB/s eta 0:00:00
+Collecting oauthlib
+  Downloading oauthlib-3.2.2-py3-none-any.whl (151 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 151.7/151.7 kB 32.7 MB/s eta 0:00:00
+Collecting opencv-python
+  Downloading opencv_python-4.10.0.84-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (62.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.5/62.5 MB 26.1 MB/s eta 0:00:00
+Collecting openpyxl
+  Downloading openpyxl-3.1.5-py2.py3-none-any.whl (250 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 250.9/250.9 kB 45.7 MB/s eta 0:00:00
+Collecting opt-einsum
+  Downloading opt_einsum-3.3.0-py3-none-any.whl (65 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.5/65.5 kB 18.7 MB/s eta 0:00:00
+Collecting overrides
+  Downloading overrides-7.7.0-py3-none-any.whl (17 kB)
+Requirement already satisfied: packaging in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 117)) (24.1)
+Collecting pafy
+  Downloading pafy-0.5.5-py2.py3-none-any.whl (35 kB)
+Collecting pandas
+  Downloading pandas-2.2.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.1/13.1 MB 81.2 MB/s eta 0:00:00
+Collecting pandocfilters
+  Downloading pandocfilters-1.5.1-py2.py3-none-any.whl (8.7 kB)
+Collecting parso
+  Downloading parso-0.8.4-py2.py3-none-any.whl (103 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.7/103.7 kB 25.4 MB/s eta 0:00:00
+Collecting pathspec
+  Downloading pathspec-0.12.1-py3-none-any.whl (31 kB)
+Collecting pathy
+  Downloading pathy-0.11.0-py3-none-any.whl (47 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 47.3/47.3 kB 12.9 MB/s eta 0:00:00
+Collecting pbr
+  Downloading pbr-6.0.0-py2.py3-none-any.whl (107 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 107.5/107.5 kB 26.8 MB/s eta 0:00:00
+Collecting pexpect
+  Downloading pexpect-4.9.0-py2.py3-none-any.whl (63 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.8/63.8 kB 16.3 MB/s eta 0:00:00
+Collecting pickleshare
+  Downloading pickleshare-0.7.5-py2.py3-none-any.whl (6.9 kB)
+Collecting Pillow
+  Downloading pillow-10.4.0-cp39-cp39-manylinux_2_28_x86_64.whl (4.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 86.5 MB/s eta 0:00:00
+Collecting platformdirs
+  Downloading platformdirs-4.2.2-py3-none-any.whl (18 kB)
+Collecting pluggy
+  Downloading pluggy-1.5.0-py3-none-any.whl (20 kB)
+Collecting pptree
+  Downloading pptree-3.1.tar.gz (3.0 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting preshed
+  Downloading preshed-3.0.9-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (157 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 157.5/157.5 kB 34.1 MB/s eta 0:00:00
+Collecting prometheus-client
+  Downloading prometheus_client-0.20.0-py3-none-any.whl (54 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 54.5/54.5 kB 14.7 MB/s eta 0:00:00
+Collecting prompt-toolkit
+  Downloading prompt_toolkit-3.0.47-py3-none-any.whl (386 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 386.4/386.4 kB 54.4 MB/s eta 0:00:00
+Collecting protobuf
+  Downloading protobuf-5.27.2-cp38-abi3-manylinux2014_x86_64.whl (309 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 309.3/309.3 kB 45.7 MB/s eta 0:00:00
+Collecting ptyprocess
+  Downloading ptyprocess-0.7.0-py2.py3-none-any.whl (13 kB)
+Collecting pure-eval
+  Downloading pure_eval-0.2.2-py3-none-any.whl (11 kB)
+Collecting py
+  Downloading py-1.11.0-py2.py3-none-any.whl (98 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98.7/98.7 kB 22.5 MB/s eta 0:00:00
+Collecting py4j
+  Downloading py4j-0.10.9.7-py2.py3-none-any.whl (200 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 200.5/200.5 kB 39.0 MB/s eta 0:00:00
+Collecting pyasn1
+  Downloading pyasn1-0.6.0-py2.py3-none-any.whl (85 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.3/85.3 kB 22.8 MB/s eta 0:00:00
+Collecting pyasn1-modules
+  Downloading pyasn1_modules-0.4.0-py3-none-any.whl (181 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 181.2/181.2 kB 35.8 MB/s eta 0:00:00
+Collecting pycparser
+  Downloading pycparser-2.22-py3-none-any.whl (117 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.6/117.6 kB 27.8 MB/s eta 0:00:00
+Requirement already satisfied: pydantic in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 142)) (1.10.17)
+Collecting pyenchant
+  Downloading pyenchant-3.2.2-py3-none-any.whl (55 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 55.7/55.7 kB 13.3 MB/s eta 0:00:00
+Collecting Pygments
+  Downloading pygments-2.18.0-py3-none-any.whl (1.2 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 78.6 MB/s eta 0:00:00
+Collecting pyparsing
+  Downloading pyparsing-3.1.2-py3-none-any.whl (103 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.2/103.2 kB 27.4 MB/s eta 0:00:00
+Collecting pyrsistent
+  Downloading pyrsistent-0.20.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (117 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.5/117.5 kB 28.4 MB/s eta 0:00:00
+Collecting PySocks
+  Downloading PySocks-1.7.1-py3-none-any.whl (16 kB)
+Collecting pyspark
+  Downloading pyspark-3.5.1.tar.gz (317.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 317.0/317.0 MB 2.7 MB/s eta 0:00:00
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting pytest
+  Downloading pytest-8.2.2-py3-none-any.whl (339 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 339.9/339.9 kB 6.0 MB/s eta 0:00:00
+Collecting python-dateutil
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 229.9/229.9 kB 2.2 MB/s eta 0:00:00
+Requirement already satisfied: python-multipart in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 151)) (0.0.9)
+Collecting pytorch-transformers
+  Downloading pytorch_transformers-1.2.0-py3-none-any.whl (176 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 176.4/176.4 kB 3.5 MB/s eta 0:00:00
+Collecting pytz
+  Downloading pytz-2024.1-py2.py3-none-any.whl (505 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 505.5/505.5 kB 9.6 MB/s eta 0:00:00
+Requirement already satisfied: PyYAML in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 154)) (6.0.1)
+Collecting pyzmq
+  Downloading pyzmq-26.0.3-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (912 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 912.8/912.8 kB 10.9 MB/s eta 0:00:00
+Collecting qtconsole
+  Downloading qtconsole-5.5.2-py3-none-any.whl (123 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 123.4/123.4 kB 1.2 MB/s eta 0:00:00
+Collecting QtPy
+  Downloading QtPy-2.4.1-py3-none-any.whl (93 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 93.5/93.5 kB 1.3 MB/s eta 0:00:00
+Collecting regex
+  Downloading regex-2024.5.15-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (774 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 774.6/774.6 kB 10.0 MB/s eta 0:00:00
+Collecting requests
+  Downloading requests-2.32.3-py3-none-any.whl (64 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 64.9/64.9 kB 794.3 kB/s eta 0:00:00
+Collecting requests-oauthlib
+  Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl (24 kB)
+Collecting retina-face
+  Downloading retina_face-0.0.17-py3-none-any.whl (25 kB)
+Collecting rich
+  Downloading rich-13.7.1-py3-none-any.whl (240 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 240.7/240.7 kB 3.3 MB/s eta 0:00:00
+Collecting rsa
+  Downloading rsa-4.9-py3-none-any.whl (34 kB)
+Collecting s3transfer
+  Downloading s3transfer-0.10.2-py3-none-any.whl (82 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 82.7/82.7 kB 758.3 kB/s eta 0:00:00
+Collecting sacremoses
+  Downloading sacremoses-0.1.1-py3-none-any.whl (897 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 897.5/897.5 kB 11.0 MB/s eta 0:00:00
+Collecting schema
+  Downloading schema-0.7.7-py2.py3-none-any.whl (18 kB)
+Collecting scikit-learn
+  Downloading scikit_learn-1.5.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.4/13.4 MB 35.7 MB/s eta 0:00:00
+Collecting scipy
+  Downloading scipy-1.13.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (38.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 38.6/38.6 MB 40.9 MB/s eta 0:00:00
+Collecting seaborn
+  Downloading seaborn-0.13.2-py3-none-any.whl (294 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 294.9/294.9 kB 44.1 MB/s eta 0:00:00
+Collecting segtok
+  Downloading segtok-1.5.11-py3-none-any.whl (24 kB)
+Collecting Send2Trash
+  Downloading Send2Trash-1.8.3-py3-none-any.whl (18 kB)
+Collecting sentence-transformers
+  Downloading sentence_transformers-3.0.1-py3-none-any.whl (227 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 227.1/227.1 kB 36.6 MB/s eta 0:00:00
+Collecting sentencepiece
+  Downloading sentencepiece-0.2.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 77.7 MB/s eta 0:00:00
+Collecting six
+  Downloading six-1.16.0-py2.py3-none-any.whl (11 kB)
+Collecting smart-open
+  Downloading smart_open-7.0.4-py3-none-any.whl (61 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.2/61.2 kB 17.9 MB/s eta 0:00:00
+Requirement already satisfied: sniffio in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 176)) (1.3.1)
+Collecting soupsieve
+  Downloading soupsieve-2.5-py3-none-any.whl (36 kB)
+Collecting spacy
+  Downloading spacy-3.7.5-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (6.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 32.8 MB/s eta 0:00:00
+Collecting spacy-legacy
+  Downloading spacy_legacy-3.0.12-py2.py3-none-any.whl (29 kB)
+Collecting spark-nlp
+  Downloading spark_nlp-5.4.1-py2.py3-none-any.whl (579 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 579.2/579.2 kB 63.5 MB/s eta 0:00:00
+Collecting sparknlp
+  Downloading sparknlp-1.0.0-py3-none-any.whl (1.4 kB)
+Collecting sqlitedict
+  Downloading sqlitedict-2.1.0.tar.gz (21 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting srsly
+  Downloading srsly-2.4.8-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (492 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 492.4/492.4 kB 61.2 MB/s eta 0:00:00
+Collecting stack-data
+  Downloading stack_data-0.6.3-py3-none-any.whl (24 kB)
+Requirement already satisfied: starlette in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 185)) (0.22.0)
+Collecting tabulate
+  Downloading tabulate-0.9.0-py3-none-any.whl (35 kB)
+Collecting tensorboard
+  Downloading tensorboard-2.17.0-py3-none-any.whl (5.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 62.8 MB/s eta 0:00:00
+Collecting tensorboard-data-server
+  Downloading tensorboard_data_server-0.7.2-py3-none-manylinux_2_31_x86_64.whl (6.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 92.0 MB/s eta 0:00:00
+Collecting tensorboard-plugin-wit
+  Downloading tensorboard_plugin_wit-1.8.1-py3-none-any.whl (781 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 781.3/781.3 kB 67.3 MB/s eta 0:00:00
+Collecting tensorflow
+  Downloading tensorflow-2.17.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (601.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 601.3/601.3 MB 1.4 MB/s eta 0:00:00
+Collecting tensorflow-io-gcs-filesystem
+  Downloading tensorflow_io_gcs_filesystem-0.37.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (5.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.1/5.1 MB 82.9 MB/s eta 0:00:00
+Collecting termcolor
+  Downloading termcolor-2.4.0-py3-none-any.whl (7.7 kB)
+Collecting terminado
+  Downloading terminado-0.18.1-py3-none-any.whl (14 kB)
+Collecting testpath
+  Downloading testpath-0.6.0-py3-none-any.whl (83 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 83.9/83.9 kB 21.6 MB/s eta 0:00:00
+Collecting testresources
+  Downloading testresources-2.0.1-py2.py3-none-any.whl (36 kB)
+Collecting tf-estimator-nightly
+  Downloading tf_estimator_nightly-2.16.0.dev2024012409-py2.py3-none-any.whl (442 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 442.6/442.6 kB 55.2 MB/s eta 0:00:00
+Collecting thinc
+  Downloading thinc-9.0.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (845 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 845.1/845.1 kB 68.8 MB/s eta 0:00:00
+Collecting threadpoolctl
+  Downloading threadpoolctl-3.5.0-py3-none-any.whl (18 kB)
+Collecting tokenizers
+  Downloading tokenizers-0.19.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.6/3.6 MB 83.9 MB/s eta 0:00:00
+Collecting toml
+  Downloading toml-0.10.2-py2.py3-none-any.whl (16 kB)
+Collecting tomli
+  Downloading tomli-2.0.1-py3-none-any.whl (12 kB)
+Collecting torch
+  Downloading torch-2.3.1-cp39-cp39-manylinux1_x86_64.whl (779.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 779.1/779.1 MB 852.3 kB/s eta 0:00:00
+Collecting torchvision
+  Downloading torchvision-0.18.1-cp39-cp39-manylinux1_x86_64.whl (7.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.0/7.0 MB 85.6 MB/s eta 0:00:00
+Collecting tornado
+  Downloading tornado-6.4.1-cp38-abi3-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (436 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 436.8/436.8 kB 56.5 MB/s eta 0:00:00
+Collecting tqdm
+  Downloading tqdm-4.66.4-py3-none-any.whl (78 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.3/78.3 kB 20.1 MB/s eta 0:00:00
+Collecting traitlets
+  Downloading traitlets-5.14.3-py3-none-any.whl (85 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.4/85.4 kB 21.2 MB/s eta 0:00:00
+Collecting transformers
+  Downloading transformers-4.42.4-py3-none-any.whl (9.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.3/9.3 MB 90.9 MB/s eta 0:00:00
+Collecting typer
+  Downloading typer-0.12.3-py3-none-any.whl (47 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 47.2/47.2 kB 13.1 MB/s eta 0:00:00
+Collecting typing
+  Downloading typing-3.7.4.3.tar.gz (78 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.6/78.6 kB 19.7 MB/s eta 0:00:00
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Requirement already satisfied: typing_extensions in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 210)) (4.12.2)
+Collecting tzdata
+  Downloading tzdata-2024.1-py2.py3-none-any.whl (345 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 345.4/345.4 kB 50.1 MB/s eta 0:00:00
+Collecting urllib3
+  Downloading urllib3-2.2.2-py3-none-any.whl (121 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 121.4/121.4 kB 29.4 MB/s eta 0:00:00
+Requirement already satisfied: uvicorn in /usr/local/lib/python3.9/site-packages (from -r /app/requirements.txt (line 213)) (0.20.0)
+Collecting validators
+  Downloading validators-0.33.0-py3-none-any.whl (43 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.3/43.3 kB 10.9 MB/s eta 0:00:00
+Collecting wasabi
+  Downloading wasabi-1.1.3-py3-none-any.whl (27 kB)
+Collecting wcwidth
+  Downloading wcwidth-0.2.13-py2.py3-none-any.whl (34 kB)
+Collecting webencodings
+  Downloading webencodings-0.5.1-py2.py3-none-any.whl (11 kB)
+Collecting Werkzeug
+  Downloading werkzeug-3.0.3-py3-none-any.whl (227 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 227.3/227.3 kB 44.1 MB/s eta 0:00:00
+Collecting widgetsnbextension
+  Downloading widgetsnbextension-4.0.11-py3-none-any.whl (2.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 85.2 MB/s eta 0:00:00
+Collecting Wikipedia-API
+  Downloading Wikipedia_API-0.6.0-py3-none-any.whl (14 kB)
+Collecting wrapt
+  Downloading wrapt-1.16.0-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (80 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.1/80.1 kB 20.5 MB/s eta 0:00:00
+Collecting youtube-dl
+  Downloading youtube_dl-2021.12.17-py2.py3-none-any.whl (1.9 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 87.6 MB/s eta 0:00:00
+Collecting zipp
+  Downloading zipp-3.19.2-py3-none-any.whl (9.0 kB)
+Requirement already satisfied: exceptiongroup>=1.0.2 in /usr/local/lib/python3.9/site-packages (from anyio->-r /app/requirements.txt (line 3)) (1.2.1)
+Requirement already satisfied: wheel<1.0,>=0.23.0 in /usr/local/lib/python3.9/site-packages (from astunparse->-r /app/requirements.txt (line 8)) (0.43.0)
+Collecting urllib3
+  Downloading urllib3-1.26.19-py2.py3-none-any.whl (143 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 143.9/143.9 kB 32.6 MB/s eta 0:00:00
+Collecting keras>=2.2.0
+  Downloading keras-3.4.1-py3-none-any.whl (1.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 76.2 MB/s eta 0:00:00
+Collecting fire>=0.4.0
+  Downloading fire-0.6.0.tar.gz (88 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.4/88.4 kB 23.2 MB/s eta 0:00:00
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Requirement already satisfied: gunicorn>=20.1.0 in /usr/local/lib/python3.9/site-packages (from deepface->-r /app/requirements.txt (line 36)) (22.0.0)
+Collecting torchvision
+  Downloading torchvision-0.17.2-cp39-cp39-manylinux1_x86_64.whl (6.9 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.9/6.9 MB 89.1 MB/s eta 0:00:00
+Collecting Pillow
+  Downloading pillow-10.2.0-cp39-cp39-manylinux_2_28_x86_64.whl (4.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 84.6 MB/s eta 0:00:00
+Collecting numpy
+  Downloading numpy-1.26.4-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.2 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.2/18.2 MB 58.9 MB/s eta 0:00:00
+Collecting torch
+  Downloading torch-2.2.2-cp39-cp39-manylinux1_x86_64.whl (755.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━╸            527.3/755.5 MB 28.4 MB/s eta 0:00:09
+ERROR: Exception:
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/urllib3/response.py", line 438, in _error_catcher
+    yield
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/urllib3/response.py", line 561, in read
+    data = self._fp_read(amt) if not fp_closed else b""
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/urllib3/response.py", line 527, in _fp_read
+    return self._fp.read(amt) if amt is not None else self._fp.read()
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/cachecontrol/filewrapper.py", line 94, in read
+    self.__buf.write(data)
+  File "/usr/local/lib/python3.9/tempfile.py", line 494, in func_wrapper
+    return func(*args, **kwargs)
+OSError: [Errno 28] No space left on device
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/cli/base_command.py", line 160, in exc_logging_wrapper
+    status = run_func(*args)
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/cli/req_command.py", line 247, in wrapper
+    return func(self, options, args)
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/commands/install.py", line 419, in run
+    requirement_set = resolver.resolve(
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/resolver.py", line 92, in resolve
+    result = self._result = resolver.resolve(
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/resolvelib/resolvers.py", line 481, in resolve
+    state = resolution.resolve(requirements, max_rounds=max_rounds)
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/resolvelib/resolvers.py", line 373, in resolve
+    failure_causes = self._attempt_to_pin_criterion(name)
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/resolvelib/resolvers.py", line 213, in _attempt_to_pin_criterion
+    criteria = self._get_updated_criteria(candidate)
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/resolvelib/resolvers.py", line 204, in _get_updated_criteria
+    self._add_to_criteria(criteria, requirement, parent=candidate)
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/resolvelib/resolvers.py", line 172, in _add_to_criteria
+    if not criterion.candidates:
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/resolvelib/structs.py", line 151, in __bool__
+    return bool(self._sequence)
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/found_candidates.py", line 155, in __bool__
+    return any(self)
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/found_candidates.py", line 143, in <genexpr>
+    return (c for c in iterator if id(c) not in self._incompatible_ids)
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/found_candidates.py", line 47, in _iter_built
+    candidate = func()
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/factory.py", line 206, in _make_candidate_from_link
+    self._link_candidate_cache[link] = LinkCandidate(
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/candidates.py", line 297, in __init__
+    super().__init__(
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/candidates.py", line 162, in __init__
+    self.dist = self._prepare()
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/candidates.py", line 231, in _prepare
+    dist = self._prepare_distribution()
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/resolution/resolvelib/candidates.py", line 308, in _prepare_distribution
+    return preparer.prepare_linked_requirement(self._ireq, parallel_builds=True)
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/operations/prepare.py", line 491, in prepare_linked_requirement
+    return self._prepare_linked_requirement(req, parallel_builds)
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/operations/prepare.py", line 536, in _prepare_linked_requirement
+    local_file = unpack_url(
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/operations/prepare.py", line 166, in unpack_url
+    file = get_http_url(
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/operations/prepare.py", line 107, in get_http_url
+    from_path, content_type = download(link, temp_dir.path)
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/network/download.py", line 147, in __call__
+    for chunk in chunks:
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/cli/progress_bars.py", line 53, in _rich_progress_bar
+    for chunk in iterable:
+  File "/usr/local/lib/python3.9/site-packages/pip/_internal/network/utils.py", line 63, in response_chunks
+    for chunk in response.raw.stream(
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/urllib3/response.py", line 622, in stream
+    data = self.read(amt=amt, decode_content=decode_content)
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/urllib3/response.py", line 587, in read
+    raise IncompleteRead(self._fp_bytes_read, self.length_remaining)
+  File "/usr/local/lib/python3.9/contextlib.py", line 137, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/usr/local/lib/python3.9/site-packages/pip/_vendor/urllib3/response.py", line 455, in _error_catcher
+    raise ProtocolError("Connection broken: %r" % e, e)
+pip._vendor.urllib3.exceptions.ProtocolError: ("Connection broken: OSError(28, 'No space left on device')", OSError(28, 'No space left on device'))
+
+[notice] A new release of pip is available: 23.0.1 -> 24.1.2
+[notice] To update, run: pip install --upgrade pip
+The command '/bin/sh -c pip install -r /app/requirements.txt' returned a non-zero code: 2
+root@ml-opexwise:/var/opt/kafka/sentimental-analysis-multiclass# cat Dockerfile
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
+
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub 16
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+gnupg2 curl ca-certificates && \
+    curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub | apt-key add - && \
+    echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/cuda.list && \
+    echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list && \
+    apt-get purge --autoremove -y curl && \
+rm -rf /var/lib/apt/lists/*
+
+ENV CUDA_VERSION 10.2.89
+
+ENV CUDA_PKG_VERSION 10-2=$CUDA_VERSION-1
+
+# For libraries in the cuda-compat-* package: https://docs.nvidia.com/cuda/eula/index.html#attachment-a
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        cuda-cudart-$CUDA_PKG_VERSION \
+cuda-compat-10-2 && \
+ln -s cuda-10.2 /usr/local/cuda && \
+    rm -rf /var/lib/apt/lists/*
+
+# Required for nvidia-docker v1
+RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
+    echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
+
+ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
+ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+
+# nvidia-container-runtime
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
+ENV NVIDIA_REQUIRE_CUDA "cuda>=10.2 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=396,driver<397 brand=tesla,driver>=410,driver<411 brand=tesla,driver>=418,driver<419"
+
+COPY ./requirements.txt /app/requirements.txt
+
+RUN pip install -r /app/requirements.txt
+
+# RUN python -m nltk.downloader wordnet
+# RUN python -m nltk.downloader stopwords
+
+# RUN apt-get update && apt-get install -y software-properties-common && apt-get install -y python3-pip && apt-get install -y python-enchant
+
+COPY . /app
+root@ml-opexwise:/var/opt/kafka/sentimental-analysis-multiclass#
